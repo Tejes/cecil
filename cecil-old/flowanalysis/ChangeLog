@@ -1,0 +1,110 @@
+2009-03-09	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
+	* Cecil.FlowAnalysis.Tests/ActionFlowTestFixture.cs
+	* Cecil.FlowAnalysis.Tests/ControlFlowTestFixture.cs
+	* Cecil.FlowAnalysis/ActionFlow/ExpressionDecompiler.cs
+	* testcases/FlowAnalysis/Box.il
+	* testcases/FlowAnalysis/Box-afg.txt
+	* testcases/FlowAnalysis/Box-cfg.txt
+		Interpret box instruction as CastExpression.
+	
+2008-02-07  Jb Evain  <jbevain@novell.com>
+
+	* Cecil.FlowAnalysis/ControlFlow/ControlFlowGraphBuilder.cs
+	* Cecil.FlowAnalysis/Utilities/Formatter.cs
+	* Cecil.FlowAnalysis.Tests/ControlFlowTestFixture.cs
+	* testcases/FlowAnalysis/Switch-cfg.txt
+	* testcases/FlowAnalysis/Switch.il
+		Add support for switch in control flow graphs.
+
+2008-01-16  Jb Evain  <jbevain@novell.com>
+
+	* Support for not.
+
+2008-01-13  Jb Evain  <jbevain@novell.com>
+
+	* Support for more ldloc, stloc, ldarg.
+
+2008-01-13  Jb Evain  <jbevain@novell.com>
+
+	* Support for div, sub, shr, shl, and, or, xor, rem.
+
+2007-12-29	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
+	* Support for static fields (ldsfld, stsfld)
+
+2007-12-10  Jb Evain  <jbevain@novell.com>
+
+	* Support for dup, add and stfld.
+	Patch by Sanghyeon Seo <sanxiyn@gmail.com>
+
+2007-12-09  Jb Evain  <jbevain@novell.com>
+
+	* Support for isinst.
+
+2007-11-26	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
+	* codegen/gen-ControlFlowGraphRegression.boo
+	  codegen/CodeStructureModel.boo
+	  Cecil.FlowAnalysis/ActionFlow/ActionFlowGraphBuilder.cs
+	  Cecil.FlowAnalysis/ActionFlow/ExpressionDecompiler.cs
+	  Cecil.FlowAnalysis/Cecil.FlowAnalysis.csproj
+	  Cecil.FlowAnalysis/CodeStructure/ICodeStructureVisitor.cs
+	  Cecil.FlowAnalysis/CodeStructure/CodeElementType.cs
+	  Cecil.FlowAnalysis/CodeStructure/AbstractCodeStructureVisitor.cs
+	  Cecil.FlowAnalysis/CodeStructure/ExpressionPrinter.cs
+	  Cecil.FlowAnalysis/CodeStructure/CastExpression.cs
+	  Cecil.FlowAnalysis.Tests/ActionFlowTestFixture.cs
+	  Cecil.FlowAnalysis.Tests/ControlFlowTestFixture.cs
+	  testcases/FlowAnalysis/StringCast.il
+	  testcases/FlowAnalysis/StringCast-afg.txt
+	  testcases/FlowAnalysis/StringCast-cfg.txt:
+	  	Support for converting castclass to CastExpression and callvirt to
+		MethodInvocationExpression.
+
+2007-09-30  Jb Evain  <jbevain@novell.com>
+
+	* README: test commit script
+
+2007-08-08  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* default.build: compact framework 1.0 build fix
+
+2006-09-15  Jb Evain  <jbevain@gmail.com>
+
+	* convert to the new Cecil API.
+
+2006-05-12  Jb Evain  <jbevain@gmail.com>
+
+	* Cecil.FlowAnalysis/AssemblyInfo.cs:
+		Hide the info if FlowAnalysis is embedded.
+
+2006-05-08  Jb Evain  <jbevain@gmail.com>
+
+	* Cecil.FlowAnalysis/AssemblyInfo.cs
+	  Makefile:
+		Sign the assembly.
+
+2006-01-30  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Makefile
+		a simple Makefile to get mono hackers started
+
+2005-12-19  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Cecil.FlowAnalysis.Tests/ActionFlowTestFixture.cs
+	  testcases/FlowAnalysis/IntPropertyEquals2.il
+	  testcases/FlowAnalysis/IntPropertyEquals1-afg.txt
+	  testcases/FlowAnalysis/IntPropertyEquals2-afg.txt:
+	  	more test cases
+
+testcases/FlowAnalysis/IntPropertyEquals1.il
+2005-12-19  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Cecil.FlowAnalysis.Tests/AbstractFlowAnalysisTestFixture.cs:
+		take into account that the path to the temp directory might contain
+		spaces
+
+2005-11-29  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Initial import
