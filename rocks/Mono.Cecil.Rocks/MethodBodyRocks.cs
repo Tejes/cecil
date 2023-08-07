@@ -19,7 +19,13 @@ namespace Mono.Cecil.Rocks {
 #endif
 	static class MethodBodyRocks {
 
-		public static void SimplifyMacros (this MethodBody self)
+		public static void Simplify(this MethodBody self)
+		{
+			SimplifyLoadsAndStores (self);
+			SimplifyBranches (self);
+		}
+
+		public static void SimplifyLoadsAndStores (this MethodBody self)
 		{
 			if (self == null)
 				throw new ArgumentNullException ("self");
@@ -116,6 +122,20 @@ namespace Mono.Cecil.Rocks {
 				case Code.Ldc_I4_S:
 					ExpandMacro (instruction, OpCodes.Ldc_I4, (int) (sbyte) instruction.Operand);
 					break;
+				}
+			}
+		}
+
+		public static void SimplifyBranches (this MethodBody self)
+		{
+			if (self == null)
+				throw new ArgumentNullException ("self");
+
+			foreach (var instruction in self.Instructions) {
+				if (instruction.OpCode.OperandType != OperandType.ShortInlineBrTarget)
+					continue;
+
+				switch (instruction.OpCode.Code) {
 				case Code.Br_S:
 					instruction.OpCode = OpCodes.Br;
 					break;
@@ -183,7 +203,7 @@ namespace Mono.Cecil.Rocks {
 			OptimizeMacros (self);
 		}
 
-		static void OptimizeLongs (this MethodBody self)
+		public static void OptimizeLongs (this MethodBody self)
 		{
 			for (var i = 0; i < self.Instructions.Count; i++) {
 				var instruction = self.Instructions [i];
@@ -198,6 +218,12 @@ namespace Mono.Cecil.Rocks {
 		}
 
 		public static void OptimizeMacros (this MethodBody self)
+		{
+			OptimizeLoadsAndStores (self);
+			OptimizeBranches (self);
+		}
+
+		public static void OptimizeLoadsAndStores (this MethodBody self)
 		{
 			if (self == null)
 				throw new ArgumentNullException ("self");
@@ -329,11 +355,9 @@ namespace Mono.Cecil.Rocks {
 					break;
 				}
 			}
-
-			OptimizeBranches (self);
 		}
 
-		static void OptimizeBranches (MethodBody body)
+		public static void OptimizeBranches (this MethodBody body)
 		{
 			ComputeOffsets (body);
 
