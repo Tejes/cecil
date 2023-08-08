@@ -120,6 +120,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			case FlowControl.Branch:
 			case FlowControl.Return:
 			case FlowControl.Cond_Branch:
+			case FlowControl.Throw:
 				return true;
 			}
 			return false;
@@ -307,6 +308,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 				break;
 			case FlowControl.Return:
+			case FlowControl.Throw:
 				break;
 			default:
 				throw new ArgumentException (
