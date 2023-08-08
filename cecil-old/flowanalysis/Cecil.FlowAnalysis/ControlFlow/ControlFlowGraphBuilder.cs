@@ -73,12 +73,11 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		void MarkBlockStarts (Collection<Instruction> instructions)
 		{
-			Instruction instruction = instructions [0];
-
 			// the first instruction starts a block
-			MarkBlockStart (instruction);
-			for (int i = 1; i < instructions.Count; ++i) {
-				instruction = instructions [i];
+			MarkBlockStart (instructions[0]);
+
+			foreach (var instruction in instructions)
+			{
 				if (!IsBlockDelimiter (instruction))
 					continue;
 
@@ -354,7 +353,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		static Instruction GetBranchTarget (Instruction instruction)
 		{
-			return (Instruction) instruction.Operand;
+			return instruction.Operand as Instruction;
 		}
 
 		void RegisterBlock (InstructionBlock block)
