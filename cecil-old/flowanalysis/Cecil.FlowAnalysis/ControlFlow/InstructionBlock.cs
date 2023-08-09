@@ -31,10 +31,10 @@ using Mono.Collections.Generic;
 
 namespace Cecil.FlowAnalysis.ControlFlow {
 
-	public class InstructionBlock : IComparable, IEnumerable {
 
 		public static readonly InstructionBlock [] NoSuccessors = new InstructionBlock [0];
 
+	public class InstructionBlock : IComparable, IEnumerable<Instruction> {
 		Instruction _firstInstruction;
 		Instruction _lastInstruction;
 		InstructionBlock [] _successors = NoSuccessors;
@@ -57,11 +57,6 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			_firstInstruction = first;
 		}
 
-		internal void SetLastInstruction (Instruction last)
-		{
-			if (null == last) throw new ArgumentNullException ("last");
-			_lastInstruction = last;
-		}
 
 		internal void SetSuccessors (InstructionBlock [] successors)
 		{
@@ -73,16 +68,20 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			return _firstInstruction.Offset.CompareTo (((InstructionBlock)obj).FirstInstruction.Offset);
 		}
 
-		public IEnumerator GetEnumerator ()
+		public IEnumerator<Instruction> GetEnumerator ()
 		{
-			var instructions = new Collection<Instruction> ();
 			Instruction instruction = _firstInstruction;
 			while (true) {
-				instructions.Add (instruction);
-				if (instruction == _lastInstruction) break;
+				yield return instruction;
+				if (instruction == _lastInstruction)
+					break;
 				instruction = instruction.Next;
 			}
-			return instructions.GetEnumerator ();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }
