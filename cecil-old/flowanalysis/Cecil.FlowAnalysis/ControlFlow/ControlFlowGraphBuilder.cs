@@ -54,11 +54,14 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			_body = method.Body;
 		}
 
-		public ControlFlowGraph BuildGraph ()
+		public ControlFlowGraph BuildGraph (bool computeInstructionData, bool simplifyGraph)
 		{
 			DelimitBlocks ();
 			ConnectBlocks ();
-			ComputeInstructionData ();
+			if (computeInstructionData)
+				ComputeInstructionData ();
+			if (simplifyGraph)
+				SimplifyBlocks ();
 			return new ControlFlowGraph (_body, RegisteredBlocks, _instructionData);
 		}
 
@@ -309,6 +312,23 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 					string.Format ("Unhandled instruction flow behavior {0}: {1}",
 					               instruction.OpCode.FlowControl,
 					               Formatter.FormatInstruction (instruction)));
+			}
+		}
+
+		void SimplifyBlocks ()
+		{
+			if (_blocks.Count < 2)
+				return;
+			foreach (var pair in _blocks) {
+				var b1 = pair.Value;
+				var b2 = b1.Successors.FirstOrDefault ();
+				// ReSharper disable once PossibleNullReferenceException
+				while (b1.Successors.Count == 1 && b2.Predecessors.Count == 1) {
+					_blocks.Remove (b2.FirstInstruction.Offset);
+					b1.LastInstruction = b2.LastInstruction;
+					b1.Successors = b2.Successors;
+					b2 = b1.Successors.FirstOrDefault ();
+				}
 			}
 		}
 
