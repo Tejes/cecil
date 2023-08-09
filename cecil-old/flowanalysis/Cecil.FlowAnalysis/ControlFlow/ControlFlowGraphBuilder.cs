@@ -24,10 +24,9 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cecil.FlowAnalysis.Utilities;
-using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Collections.Generic;
@@ -104,11 +103,11 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 			for (int i = 1; i < blocks.Length; ++i) {
 				InstructionBlock block = blocks [i];
-				current.SetLastInstruction (block.FirstInstruction.Previous);
+				current.LastInstruction = block.FirstInstruction.Previous;
 				current = block;
 			}
 
-			current.SetLastInstruction (instructions [instructions.Count - 1]);
+			current.LastInstruction = instructions [instructions.Count - 1];
 		}
 
 		static bool IsBlockDelimiter (Instruction instruction)
@@ -284,27 +283,23 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			switch (instruction.OpCode.FlowControl) {
 			case FlowControl.Branch:
 			case FlowControl.Cond_Branch: {
-				if (HasMultipleBranches (instruction)) {
-					InstructionBlock [] blocks = GetBranchTargetsBlocks (instruction);
+				if (HasMultipleBranches (instruction))
+				{
+					AddGraphEdge (block, GetBranchTargetsBlocks (instruction));
 					if (instruction.Next != null)
-						blocks = AddBlock (GetBlock (instruction.Next), blocks);
-
-					block.SetSuccessors (blocks);
+						AddGraphEdge (block, GetBlock (instruction.Next));
 					break;
 				}
 
-				InstructionBlock target = GetBranchTargetBlock (instruction);
+				AddGraphEdge (block, GetBranchTargetBlock (instruction));
 				if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch && instruction.Next != null)
-					block.SetSuccessors (new InstructionBlock [] { target, GetBlock (instruction.Next) });
-				else
-					block.SetSuccessors (new InstructionBlock [] { target });
+					AddGraphEdge (block, GetBlock (instruction.Next));
 				break;
 			}
 			case FlowControl.Call:
 			case FlowControl.Next:
 				if (null != instruction.Next)
-					block.SetSuccessors (new InstructionBlock [] { GetBlock (instruction.Next) });
-
+					AddGraphEdge (block, GetBlock (instruction.Next));
 				break;
 			case FlowControl.Return:
 			case FlowControl.Throw:
@@ -317,13 +312,16 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			}
 		}
 
-		static InstructionBlock [] AddBlock (InstructionBlock block, InstructionBlock [] blocks)
+		static void AddGraphEdge (InstructionBlock source, InstructionBlock target)
 		{
-			InstructionBlock [] result = new InstructionBlock [blocks.Length + 1];
-			Array.Copy (blocks, result, blocks.Length);
-			result [result.Length - 1] = block;
+			source.Successors.Add (target);
+			target.Predecessors.Add (source);
+		}
 
-			return result;
+		static void AddGraphEdge (InstructionBlock source, IEnumerable<InstructionBlock> targets)
+		{
+			foreach (var target in targets)
+				AddGraphEdge (source, target);
 		}
 
 		static bool HasMultipleBranches (Instruction instruction)
@@ -331,14 +329,9 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			return instruction.OpCode.Code == Code.Switch;
 		}
 
-		InstructionBlock [] GetBranchTargetsBlocks (Instruction instruction)
+		IEnumerable<InstructionBlock> GetBranchTargetsBlocks (Instruction instruction)
 		{
-			Instruction [] targets = GetBranchTargets (instruction);
-			InstructionBlock [] blocks = new InstructionBlock [targets.Length];
-			for (int i = 0; i < targets.Length; i++)
-				blocks [i] = GetBlock (targets [i]);
-
-			return blocks;
+			return GetBranchTargets (instruction).Select (GetBlock);
 		}
 
 		static Instruction [] GetBranchTargets (Instruction instruction)

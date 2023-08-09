@@ -24,7 +24,6 @@
 #endregion
 
 using System.Collections;
-using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.ControlFlow {

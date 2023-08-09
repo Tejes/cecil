@@ -25,19 +25,18 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Mono.Cecil.Cil;
 
 using Mono.Collections.Generic;
 
 namespace Cecil.FlowAnalysis.ControlFlow {
 
-
-		public static readonly InstructionBlock [] NoSuccessors = new InstructionBlock [0];
-
 	public class InstructionBlock : IComparable, IEnumerable<Instruction> {
 		Instruction _firstInstruction;
 		Instruction _lastInstruction;
-		InstructionBlock [] _successors = NoSuccessors;
+		IList<InstructionBlock> _successors = new UniqueList<InstructionBlock> ();
+		IList<InstructionBlock> _predecessors = new UniqueList<InstructionBlock> ();
 
 		public Instruction FirstInstruction {
 			get { return _firstInstruction; }
@@ -45,22 +44,25 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		public Instruction LastInstruction {
 			get { return _lastInstruction; }
+			internal set {
+				_lastInstruction = value ?? throw new ArgumentNullException ("last");
+			}
 		}
 
-		public InstructionBlock [] Successors {
+		public IList<InstructionBlock> Successors {
 			get { return _successors; }
+			internal set { _successors = value; }
+		}
+
+		public IList<InstructionBlock> Predecessors
+		{
+			get { return _predecessors; }
 		}
 
 		internal InstructionBlock (Instruction first)
 		{
 			if (null == first) throw new ArgumentNullException ("first");
 			_firstInstruction = first;
-		}
-
-
-		internal void SetSuccessors (InstructionBlock [] successors)
-		{
-			_successors = successors;
 		}
 
 		public int CompareTo (object obj)

@@ -24,6 +24,7 @@
 #endregion
 
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
@@ -60,8 +61,8 @@ namespace Cecil.FlowAnalysis.Tests {
 					Formatter.WriteInstruction (writer, instruction);
 					writer.WriteLine ();
 				}
-				InstructionBlock [] successors = block.Successors;
-				if (successors.Length > 0) {
+				IList<InstructionBlock> successors = block.Successors;
+				if (successors.Count > 0) {
 					writer.WriteLine ("\tsuccessors:");
 					foreach (InstructionBlock successor in successors) {
 						writer.WriteLine ("\t\tblock {0}", GetBlockId (cfg, successor));

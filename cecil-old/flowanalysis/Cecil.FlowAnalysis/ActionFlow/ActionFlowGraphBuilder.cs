@@ -191,7 +191,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		void ProcessBlock (InstructionBlock block)
 		{
-			switch (block.Successors.Length) {
+			switch (block.Successors.Count) {
 			case 0:
 			case 1:
 				ProcessSimpleBlock (block);
@@ -326,7 +326,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		void ProcessNestedExpression (InstructionBlock block)
 		{
-			switch (block.Successors.Length) {
+			switch (block.Successors.Count) {
 			case 1:
 				BuildExpression (block);
 				break;
@@ -493,7 +493,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			return _expressionDecompiler.Pop ();
 		}
 
-		void MarkProcessed (InstructionBlock [] blocks)
+		void MarkProcessed (IEnumerable<InstructionBlock> blocks)
 		{
 			foreach (InstructionBlock block in blocks) {
 				MarkProcessed (block);
