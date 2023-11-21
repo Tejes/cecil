@@ -315,6 +315,7 @@ namespace Mono.Cecil.Tests {
 			using (var module = ModuleDefinition.ReadModule (location, reader_parameters)) {
 				var writer_parameters = new WriterParameters {
 					SymbolWriterProvider = GetSymbolWriterProvider (),
+					WriteSymbols = true,
 				};
 
 				test_case.Test (module);

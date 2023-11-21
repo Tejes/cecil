@@ -563,6 +563,7 @@ namespace Mono.Cecil.Tests {
 
 			module.Write (file, new WriterParameters {
 				SymbolWriterProvider = symbolWriterProvider,
+				WriteSymbols = true,
 			});
 			module.Dispose ();
 

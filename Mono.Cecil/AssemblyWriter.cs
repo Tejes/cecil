@@ -151,7 +151,7 @@ namespace Mono.Cecil {
 
 		static ISymbolWriter GetSymbolWriter (ModuleDefinition module, string fq_name, ISymbolWriterProvider symbol_writer_provider, WriterParameters parameters)
 		{
-			if (symbol_writer_provider == null)
+			if (symbol_writer_provider == null || !parameters.WriteSymbols)
 				return null;
 
 			if (parameters.SymbolStream != null)
