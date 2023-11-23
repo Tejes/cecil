@@ -15,7 +15,7 @@ using System.Threading;
 
 namespace Mono.Collections.Generic {
 
-	public sealed class ReadOnlyCollection<T> : Collection<T>, ICollection<T>, IList {
+	public sealed class ReadOnlyCollection<T> : Collection<T>, ICollection<T> {
 
 		static ReadOnlyCollection<T> empty;
 
@@ -33,44 +33,16 @@ namespace Mono.Collections.Generic {
 			get { return true; }
 		}
 
-		bool IList.IsFixedSize {
-			get { return true; }
-		}
-
-		bool IList.IsReadOnly {
-			get { return true; }
-		}
-
 		ReadOnlyCollection ()
 		{
 		}
 
-		public ReadOnlyCollection (T [] array)
+		public ReadOnlyCollection (T [] array) : base(array)
 		{
-			if (array == null)
-				throw new ArgumentNullException ();
-
-			Initialize (array, array.Length);
 		}
 
-		public ReadOnlyCollection (Collection<T> collection)
+		public ReadOnlyCollection (Collection<T> collection) : base(collection)
 		{
-			if (collection == null)
-				throw new ArgumentNullException ();
-
-			Initialize (collection.items, collection.size);
-		}
-
-		void Initialize (T [] items, int size)
-		{
-			this.items = new T [size];
-			Array.Copy (items, 0, this.items, 0, size);
-			this.size = size;
-		}
-
-		internal override void Grow (int desired)
-		{
-			throw new InvalidOperationException ();
 		}
 
 		protected override void OnAdd (T item, int index)
@@ -84,6 +56,11 @@ namespace Mono.Collections.Generic {
 		}
 
 		protected override void OnInsert (T item, int index)
+		{
+			throw new InvalidOperationException ();
+		}
+
+		protected override void OnInsertRange (IList<T> items, int index)
 		{
 			throw new InvalidOperationException ();
 		}

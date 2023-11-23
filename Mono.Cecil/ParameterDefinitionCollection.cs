@@ -8,8 +8,7 @@
 // Licensed under the MIT/X11 license.
 //
 
-using System;
-
+using System.Collections.Generic;
 using Mono.Collections.Generic;
 
 namespace Mono.Cecil {
@@ -40,8 +39,20 @@ namespace Mono.Cecil {
 			item.method = method;
 			item.index = index;
 
-			for (int i = index; i < size; i++)
-				items [i].index = i + 1;
+			for (int i = index; i < Count; i++)
+				this [i].index = i + 1;
+		}
+
+		protected override void OnInsertRange (IList<ParameterDefinition> items, int index)
+		{
+			var i = index;
+			foreach (var item in items) {
+				item.method = method;
+				item.index = i++;
+			}
+
+			for (i = index; i < Count; i++)
+				this [i].index = i + 1;
 		}
 
 		protected override void OnSet (ParameterDefinition item, int index)
@@ -55,8 +66,8 @@ namespace Mono.Cecil {
 			item.method = null;
 			item.index = -1;
 
-			for (int i = index + 1; i < size; i++)
-				items [i].index = i - 1;
+			for (int i = index + 1; i < Count; i++)
+				this [i].index = i - 1;
 		}
 	}
 }

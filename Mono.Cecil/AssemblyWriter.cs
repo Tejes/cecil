@@ -1516,16 +1516,12 @@ namespace Mono.Cecil {
 
 		void AddGenericParameters ()
 		{
-			var items = this.generic_parameters.items;
-			var size = this.generic_parameters.size;
-			Array.Sort (items, 0, size, new GenericParameterComparer ());
+			generic_parameters.Sort(new GenericParameterComparer());
 
 			var generic_param_table = GetTable<GenericParamTable> (Table.GenericParam);
 			var generic_param_constraint_table = GetTable<GenericParamConstraintTable> (Table.GenericParamConstraint);
 
-			for (int i = 0; i < size; i++) {
-				var generic_parameter = items [i];
-
+			foreach (var generic_parameter in generic_parameters) {
 				var rid = generic_param_table.AddRow (new GenericParamRow (
 					(ushort) generic_parameter.Position,
 					generic_parameter.Attributes,

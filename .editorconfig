@@ -10,7 +10,7 @@ csharp_new_line_before_open_brace = methods
 csharp_new_line_before_else = false
 csharp_indent_switch_labels = false
 
-trim_trailing_whitespace = false
+trim_trailing_whitespace = true
 
 dotnet_naming_symbols.fields_locals_and_parameters.applicable_kinds = field, local, parameter
 dotnet_naming_symbols.fields_locals_and_parameters.applicable_accessibilities = *

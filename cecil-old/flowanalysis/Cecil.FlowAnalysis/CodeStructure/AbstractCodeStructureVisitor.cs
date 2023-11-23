@@ -25,7 +25,7 @@
 
 // Warning: generated do not edit
 
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Cecil.FlowAnalysis.CodeStructure {
 
@@ -37,7 +37,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			node.Accept (this);
 		}
 
-		public virtual void Visit (ICollection collection)
+		public virtual void Visit<T> (ICollection<T> collection) where T : ICodeElement
 		{
 			foreach (ICodeElement node in collection)
 			{

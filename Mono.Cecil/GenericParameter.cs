@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Mono.Collections.Generic;
 
@@ -240,8 +241,20 @@ namespace Mono.Cecil {
 		{
 			UpdateGenericParameter (item, index);
 
-			for (int i = index; i < size; i++)
-				items[i].position = i + 1;
+			for (int i = index; i < Count; i++)
+				this[i].position = i + 1;
+		}
+
+		protected override void OnInsertRange (IList<GenericParameter> items, int index)
+		{
+			var i = index;
+			var count = items.Count;
+
+			foreach (var item in items)
+				UpdateGenericParameter (item, i++);
+
+			for (i = index; i < Count; i++)
+				this [i].position += count;
 		}
 
 		protected override void OnSet (GenericParameter item, int index)
@@ -262,8 +275,8 @@ namespace Mono.Cecil {
 			item.position = -1;
 			item.type = GenericParameterType.Type;
 
-			for (int i = index + 1; i < size; i++)
-				items[i].position = i - 1;
+			for (int i = index + 1; i < Count; i++)
+				this[i].position = i - 1;
 		}
 	}
 

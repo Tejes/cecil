@@ -38,7 +38,7 @@ namespace Mono.Cecil {
 
 		public static bool IsNullOrEmpty<T> (this Collection<T> self)
 		{
-			return self == null || self.size == 0;
+			return self == null || self.Count == 0;
 		}
 
 		public static T [] Resize<T> (this T [] self, int length)

@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 using Mono.Collections.Generic;
@@ -159,6 +160,14 @@ namespace Mono.Cecil.Cil {
 			UpdateVariableIndices (index, 1);
 		}
 
+		protected override void OnInsertRange (IList<VariableDefinition> items, int index)
+		{
+			var i = index;
+			foreach (var item in items)
+				item.index = i++;
+			UpdateVariableIndices (index, items.Count);
+		}
+
 		protected override void OnSet (VariableDefinition item, int index)
 		{
 			item.index = index;
@@ -172,8 +181,8 @@ namespace Mono.Cecil.Cil {
 
 		void UpdateVariableIndices (int startIndex, int offset, VariableDefinition variableToRemove = null)
 		{
-			for (int i = startIndex; i < size; i++)
-				items [i].index = i + offset;
+			for (int i = startIndex; i < Count; i++)
+				this [i].index = i + offset;
 
 			var debug_info = method == null ? null : method.debug_info;
 			if (debug_info == null || debug_info.Scope == null)
@@ -230,25 +239,22 @@ namespace Mono.Cecil.Cil {
 			if (index == 0)
 				return;
 
-			var previous = items [index - 1];
+			var previous = this [index - 1];
 			previous.next = item;
 			item.previous = previous;
 		}
 
 		protected override void OnInsert (Instruction item, int index)
 		{
-			int startOffset = 0;
-			if (size != 0) {
-				var current = items [index];
-				if (current == null) {
-					var last = items [index - 1];
+			if (Count != 0) {
+				if (index >= Count) {
+					var last = this [index - 1];
 					last.next = item;
 					item.previous = last;
 					return;
 				}
 
-				startOffset = current.Offset;
-
+				var current = this [index];
 				var previous = current.previous;
 				if (previous != null) {
 					previous.next = item;
@@ -262,9 +268,32 @@ namespace Mono.Cecil.Cil {
 			UpdateDebugInformation (null, null);
 		}
 
+		protected override void OnInsertRange (IList<Instruction> items, int index)
+		{
+			if (index > 0) {
+				var previous = this [index-1];
+				previous.next = items [0];
+				items [0].previous = previous;
+			}
+
+			for (int i = 1; i < items.Count; i++) {
+				items [i - 1].next = items [i];
+				items [i].previous = items [i - 1];
+			}
+
+			if (index < Count) {
+				var current = this [index];
+				var last = items.Last ();
+				current.previous = last;
+				last.next = current;
+			}
+
+			UpdateDebugInformation (null, null);
+		}
+
 		protected override void OnSet (Instruction item, int index)
 		{
-			var current = items [index];
+			var current = this [index];
 
 			item.previous = current.previous;
 			item.next = current.next;

@@ -170,12 +170,7 @@ namespace Mono.Cecil.Cil {
 
 		void WriteInstructions ()
 		{
-			var instructions = body.Instructions;
-			var items = instructions.items;
-			var size = instructions.size;
-
-			for (int i = 0; i < size; i++) {
-				var instruction = items [i];
+			foreach (var instruction in body.Instructions) {
 				WriteOpCode (instruction.opcode);
 				WriteOperand (instruction);
 			}
@@ -277,7 +272,7 @@ namespace Mono.Cecil.Cil {
 		int GetTargetOffset (Instruction instruction)
 		{
 			if (instruction == null) {
-				var last = body.instructions [body.instructions.size - 1];
+				var last = body.instructions [body.instructions.Count - 1];
 				return last.offset + last.GetSize ();
 			}
 
@@ -322,9 +317,6 @@ namespace Mono.Cecil.Cil {
 		void ComputeHeader ()
 		{
 			int offset = 0;
-			var instructions = body.instructions;
-			var items = instructions.items;
-			var count = instructions.size;
 			var stack_size = 0;
 			var max_stack = 0;
 			Dictionary<Instruction, int> stack_sizes = null;
@@ -332,8 +324,7 @@ namespace Mono.Cecil.Cil {
 			if (body.HasExceptionHandlers)
 				ComputeExceptionHandlerStackSize (ref stack_sizes);
 
-			for (int i = 0; i < count; i++) {
-				var instruction = items [i];
+			foreach (var instruction in body.instructions) {
 				instruction.offset = offset;
 				offset += instruction.GetSize ();
 
