@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 using Mono.Collections.Generic;
@@ -327,7 +328,7 @@ namespace Mono.Cecil.Cil {
 			//     - If there was an edit which adds some unresolved, the cost is proportional (the code will only resolve those)
 			//  - Then update as necessary by manipulaitng instruction references alone
 
-			InstructionOffsetResolver resolver = new InstructionOffsetResolver (items, removedInstruction, existingInstruction);
+			InstructionOffsetResolver resolver = new InstructionOffsetResolver (this, removedInstruction, existingInstruction);
 
 			if (method.debug_info != null)
 				UpdateLocalScope (method.debug_info.Scope, ref resolver);
@@ -395,7 +396,7 @@ namespace Mono.Cecil.Cil {
 		}
 
 		struct InstructionOffsetResolver {
-			readonly Instruction [] items;
+			readonly IList<Instruction> items;
 			readonly Instruction removed_instruction;
 			readonly Instruction existing_instruction;
 
@@ -405,7 +406,7 @@ namespace Mono.Cecil.Cil {
 
 			public int LastOffset { get => cache_offset; }
 
-			public InstructionOffsetResolver (Instruction[] instructions, Instruction removedInstruction, Instruction existingInstruction)
+			public InstructionOffsetResolver (IList<Instruction> instructions, Instruction removedInstruction, Instruction existingInstruction)
 			{
 				items = instructions;
 				removed_instruction = removedInstruction;
@@ -445,12 +446,7 @@ namespace Mono.Cecil.Cil {
 					// This should be rare - we're resolving offset pointing to a place before the current cache position
 					// resolve by walking the instructions from start and don't cache the result.
 					int size = 0;
-					for (int i = 0; i < items.Length; i++) {
-						// The array can be larger than the actual size, in which case its padded with nulls at the end
-						// so when we reach null, treat it as an end of the IL.
-						if (items [i] == null)
-							return new InstructionOffset (i == 0 ? items [0] : items [i - 1]);
-
+					for (int i = 0; i < items.Count; i++) {
 						if (size == offset)
 							return new InstructionOffset (items [i]);
 
@@ -461,21 +457,15 @@ namespace Mono.Cecil.Cil {
 					}
 
 					// Offset is larger than the size of the body - so it points after the end
-					return new InstructionOffset ();
+					return new InstructionOffset (items.Last ());
 				} else {
 					// The offset points after the current cache position - so continue counting and update the cache
 					int size = cache_offset;
-					for (int i = cache_index; i < items.Length; i++) {
+					for (int i = cache_index; i < items.Count; i++) {
 						cache_index = i;
 						cache_offset = size;
 
 						var item = items [i];
-
-						// Allow for trailing null values in the case of
-						// instructions.Size < instructions.Capacity
-						if (item == null)
-							return new InstructionOffset (i == 0 ? items [0] : items [i - 1]);
-
 						cache_instruction = item;
 
 						if (cache_offset == offset)
@@ -487,7 +477,7 @@ namespace Mono.Cecil.Cil {
 						size += item.GetSize ();
 					}
 
-					return new InstructionOffset ();
+					return new InstructionOffset (items.Last ());
 				}
 			}
 		}
