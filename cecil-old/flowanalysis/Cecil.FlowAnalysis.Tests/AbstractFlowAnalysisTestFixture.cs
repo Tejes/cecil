@@ -27,12 +27,20 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Mono.Cecil;
 using NUnit.Framework;
 
 namespace Cecil.FlowAnalysis.Tests {
 
 	public class AbstractFlowAnalysisTestFixture {
+
+		protected static readonly bool is_windows =
+			#if NETCOREAPP
+			RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+			#else
+			true;
+			#endif
 
 		protected static string Normalize (string s)
 		{
@@ -43,7 +51,7 @@ namespace Cecil.FlowAnalysis.Tests {
 		{
 			string sourceFile = MapTestCasePath (name + ".il");
 			Assert.IsTrue (File.Exists (sourceFile), sourceFile + " not found!");
-			ilasm (string.Format ("/DLL \"/OUTPUT:{0}\" {1}", TestAssemblyPath, sourceFile));
+			ilasm (string.Format ("{2}DLL \"{2}OUTPUT:{0}\" {1}", TestAssemblyPath, sourceFile, is_windows ? "/" : "-"));
 		}
 
 		protected string LoadTestCaseFile (string fname)
