@@ -437,7 +437,7 @@ namespace Mono.Cecil.Tests {
 		[Test]
 		public void InterfaceImplementation ()
 		{
-			OnlyOnWindows (); // Mono's ilasm doesn't support .interfaceimpl
+			IgnoreOnMono (); // Mono's ilasm doesn't support .interfaceimpl
 
 			TestIL ("ca-iface-impl.il", module => {
 				var type = module.GetType ("FooType");
@@ -491,7 +491,7 @@ namespace Mono.Cecil.Tests {
 				Assert.AreEqual ("P", property.Name);
 				Assert.AreEqual ("System.String", property.Argument.Type.FullName);
 				Assert.AreEqual ("p", property.Argument.Value);
-				
+
 			}, verify: !Platform.OnMono);
 		}
 
@@ -521,7 +521,7 @@ namespace Mono.Cecil.Tests {
 				var property = attribute.Properties.Single ();
 				Assert.AreEqual ("P", property.Name);
 				Assert.AreEqual ("System.Int32", property.Argument.Type.FullName);
-				Assert.AreEqual (3, property.Argument.Value);				
+				Assert.AreEqual (3, property.Argument.Value);
 			}, verify: !Platform.OnMono);
 		}
 
