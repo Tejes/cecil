@@ -170,8 +170,8 @@ namespace Mono.Cecil.Tests {
 			var source = File.ReadAllText (name);
 
 			var tpa = BaseAssemblyResolver.TrustedPlatformAssemblies.Value;
-			
-			var references = new [] 
+
+			var references = new []
 			{
 				MetadataReference.CreateFromFile (tpa ["netstandard"]),
 				MetadataReference.CreateFromFile (tpa ["mscorlib"]),
@@ -185,9 +185,9 @@ namespace Mono.Cecil.Tests {
 			switch (extension) {
 			case ".cs":
 				return CS.CSharpCompilation.Create (
-					assemblyName, 
+					assemblyName,
 					new [] { CS.SyntaxFactory.ParseSyntaxTree (source, new CS.CSharpParseOptions (preprocessorSymbols: new string [] { "NET_CORE" })) },
-					references, 
+					references,
 					new CS.CSharpCompilationOptions (OutputKind.DynamicallyLinkedLibrary, optimizationLevel: OptimizationLevel.Release));
 			default:
 				throw new NotSupportedException ();
@@ -322,12 +322,28 @@ namespace Mono.Cecil.Tests {
 			if (Platform.OnWindows)
 				ilasm = NetFrameworkTool ("ilasm");
 
-			return RunProcess (ilasm, "/nologo", "/dll", "/out:" + Quote (output), Quote (source));
+			var arguments = new List<string> {
+				Option ("nologo"),
+				Option("dll")
+			};
+			if (Platform.OnCoreClr) {
+				arguments.Add (Option ("output=") + Quote (output));
+			} else {
+				arguments.Add (Option ("out:") + Quote (output));
+			}
+			arguments.Add (Quote (source));
+
+			return RunProcess (ilasm, arguments.ToArray ());
 		}
 
 		static string Quote (string file)
 		{
 			return "\"" + file + "\"";
+		}
+
+		static string Option (string option_name)
+		{
+			return (Platform.OnCoreClr ? "-" : "/") + option_name;
 		}
 
 		public static ProcessOutput PEVerify (string source)
