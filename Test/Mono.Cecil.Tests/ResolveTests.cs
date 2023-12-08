@@ -26,7 +26,7 @@ namespace Mono.Cecil.Tests {
 			Assert.IsNotNull (definition);
 
 			Assert.AreEqual ("System.String System.String::Empty", definition.FullName);
-			Assert.AreEqual (Platform.OnCoreClr ? "System.Private.CoreLib" : "mscorlib", 
+			Assert.AreEqual (Platform.OnCoreClr ? "System.Private.CoreLib" : "mscorlib",
 				definition.Module.Assembly.Name.Name);
 		}
 
@@ -58,7 +58,7 @@ namespace Mono.Cecil.Tests {
 
 			Assert.AreEqual ("get_Length", definition.Name);
 			Assert.AreEqual ("System.String", definition.DeclaringType.FullName);
-			Assert.AreEqual (Platform.OnCoreClr ? "System.Private.CoreLib" : "mscorlib", 
+			Assert.AreEqual (Platform.OnCoreClr ? "System.Private.CoreLib" : "mscorlib",
 				definition.Module.Assembly.Name.Name);
 		}
 
@@ -212,7 +212,7 @@ namespace Mono.Cecil.Tests {
 		[Test]
 		public void ResolveGenericParameter ()
 		{
-			var collection = typeof (Mono.Collections.Generic.Collection<>).ToDefinition ();
+			var collection = typeof (Collections.Generic.Collection<>).ToDefinition ();
 			var parameter = collection.GenericParameters [0];
 
 			Assert.IsNotNull (parameter);
