@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+    <Import Project="..\..\Mono.Cecil.Tests.props" />
+    <PropertyGroup>
+        <TargetFrameworks>netcoreapp3.1;net40</TargetFrameworks>
+    </PropertyGroup>
+    <ItemGroup>
+      <Compile Include="AbstractControlFlowTestFixture.cs" />
+      <Compile Include="AbstractFlowAnalysisTestFixture.cs" />
+      <Compile Include="ActionFlowTestFixture.cs" />
+      <Compile Include="AssemblyInfo.cs" />
+      <Compile Include="ControlFlowTestFixture.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\Mono.Cecil.csproj" />
+      <ProjectReference Include="..\Mono.Cecil.FlowAnalysis\Mono.Cecil.FlowAnalysis.csproj" />
+    </ItemGroup>
+</Project>

@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mono.Cecil.Rocks", "rocks\M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mono.Cecil.Rocks.Tests", "rocks\Test\Mono.Cecil.Rocks.Tests.csproj", "{EF768F7A-3C08-45EE-8A7E-BB5A81BADB7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cecil.FlowAnalysis", "flowanalysis\Cecil.FlowAnalysis\Cecil.FlowAnalysis.csproj", "{99FC1920-B8EF-46D0-A001-2AA16B1A1B03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mono.Cecil.FlowAnalysis", "flowanalysis\Mono.Cecil.FlowAnalysis\Mono.Cecil.FlowAnalysis.csproj", "{99FC1920-B8EF-46D0-A001-2AA16B1A1B03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cecil.FlowAnalysis.Tests", "flowanalysis\Cecil.FlowAnalysis.Tests\Cecil.FlowAnalysis.Tests.csproj", "{FF65B6E9-22E9-492C-A8AC-4C51C349C93B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mono.Cecil.FlowAnalysis.Tests", "flowanalysis\Mono.Cecil.FlowAnalysis.Tests\Mono.Cecil.FlowAnalysis.Tests.csproj", "{FF65B6E9-22E9-492C-A8AC-4C51C349C93B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
