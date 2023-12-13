@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
-    <Import Project="..\..\..\Mono.Cecil.Tests.props" />
+    <Import Project="..\..\Mono.Cecil.Tests.props" />
     <PropertyGroup>
         <TargetFrameworks>netcoreapp3.1;net40</TargetFrameworks>
     </PropertyGroup>
@@ -11,7 +11,7 @@
       <Compile Include="ControlFlowTestFixture.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Mono.Cecil.csproj" />
+      <ProjectReference Include="..\..\Mono.Cecil.csproj" />
       <ProjectReference Include="..\Cecil.FlowAnalysis\Cecil.FlowAnalysis.csproj" />
     </ItemGroup>
 </Project>

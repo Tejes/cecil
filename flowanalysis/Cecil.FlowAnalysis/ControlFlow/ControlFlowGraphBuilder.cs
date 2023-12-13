@@ -323,7 +323,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 				var b1 = pair.Value;
 				var b2 = b1.Successors.FirstOrDefault ();
 				// ReSharper disable once PossibleNullReferenceException
-				while (b1.Successors.Count == 1 && b2.Predecessors.Count == 1) {
+				while (b1.Successors.Count == 1 && b2.Predecessors.Count == 1 && b1.LastInstruction == b2.FirstInstruction) {
 					_blocks.Remove (b2.FirstInstruction.Offset);
 					b1.LastInstruction = b2.LastInstruction;
 					b1.Successors = b2.Successors;

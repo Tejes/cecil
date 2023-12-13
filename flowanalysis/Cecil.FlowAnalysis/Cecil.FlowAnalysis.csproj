@@ -51,7 +51,7 @@
     <Compile Include="Utilities\InstructionDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Mono.Cecil.csproj" />
+    <ProjectReference Include="..\..\Mono.Cecil.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.md" />
